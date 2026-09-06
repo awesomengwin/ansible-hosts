@@ -1,0 +1,12 @@
+HELP.md
+
+### STS ###
+.classpath
+.project
+.settings
+
+### IntelliJ IDEA ###
+.idea
+
+### VS Code ###
+.vscode/
