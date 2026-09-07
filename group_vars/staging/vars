@@ -1,5 +1,5 @@
 ---
-kingfisher_image: ghcr.io/awesomengwin/kingfisher:0.0.1:RELEASE
+kingfisher_image: ghcr.io/awesomengwin/kingfisher:sha-1bef31c
 kingfisher_container_name: kingfisher_staging
 kingfisher_host: kingfisher-staging.awesomengwin.com
 kingfisher_db_container_name: kingfisher_postgres_staging
