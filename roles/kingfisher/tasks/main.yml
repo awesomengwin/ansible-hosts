@@ -1,0 +1,49 @@
+---
+- name: Start kingfisher database container
+  community.docker.docker_container:
+    name: "{{ kingfisher_db_container_name }}"
+    image: postgres:18.6
+    state: healthy
+    restart_policy: unless-stopped
+    networks:
+      - name: private
+    exposed_ports:
+      - 5432
+    env:
+      POSTGRES_USER: "{{ kingfisher_db_username }}"
+      POSTGRES_PASSWORD: "{{ kingfisher_db_password }}"
+      POSTGRES_DB: "{{ kingfisher_db_database_name }}"
+    volumes:
+      - "{{ kingfisher_db_data_dir }}:/var/lib/postgresql"
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+- name: Start kingfisher container
+  community.docker.docker_container:
+    name: "{{ kingfisher_container_name }}"
+    image: "{{ kingfisher_image }}"
+    state: healthy
+    restart_policy: unless-stopped
+    networks:
+      - name: public
+      - name: private
+    exposed_ports:
+      - 8080
+    env:
+      DB_URL: "jdbc:postgresql://{{ kingfisher_db_container_name }}:5432/{{ kingfisher_db_database_name }}"
+      DB_USERNAME: "{{ kingfisher_db_username }}"
+      DB_PASSWORD: "{{ kingfisher_db_password }}"
+      SPOTIFY_CLIENT_ID: "{{ kingfisher_spotify_client_id }}"
+      SPOTIFY_CLIENT_SECRET: "{{ kingfisher_spotify_client_secret }}"
+      LYRICS_API_URL: "{{ kingfisher_lyrics_api_url }}"
+      VIRTUAL_HOST: "{{ kingfisher_host }}"
+      VIRTUAL_PORT: "8080"
+      LETSENCRYPT_HOST: "{{ kingfisher_host }}"
+    healthcheck:
+      test: [ "CMD-SHELL", "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3

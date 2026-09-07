@@ -1,0 +1,12 @@
+---
+kingfisher_image: ghcr.io/awesomengwin/kingfisher:0.0.1:RELEASE
+kingfisher_container_name: kingfisher_staging
+kingfisher_host: kingfisher-staging.awesomengwin.com
+kingfisher_db_container_name: kingfisher_postgres_staging
+kingfisher_db_username: "{{ vault_kingfisher_db_username }}"
+kingfisher_db_password: "{{ vault_kingfisher_db_password }}"
+kingfisher_db_database_name: kingfisher
+kingfisher_db_data_dir: /opt/awesomengwin/kingfisher/staging/postgres
+kingfisher_spotify_client_id: "{{ vault_kingfisher_spotify_client_id }}"
+kingfisher_spotify_client_secret: "{{ vault_kingfisher_spotify_client_secret }}"
+kingfisher_lyrics_api_url: "{{ vault_kingfisher_lyrics_api_url }}"
