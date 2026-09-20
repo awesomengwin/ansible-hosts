@@ -33,9 +33,11 @@ jobs:
           cat "$APP_VARS_PATH"
 
       - name: Commit updated image
+        env:
+          APP_VARS_PATH: group_vars/${{ env.ENVIRONMENT }}/vars
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
-          commit_message: "Update ${{ env.IMAGE }} at ${{ env.APP_VARS_PATH }} to version ${{ env.VERSION }}"
+          commit_message: "Update ${{ env.IMAGE }} at $APP_VARS_PATH to version ${{ env.VERSION }}"
           branch: main
 
       - name: Setup SSH key
