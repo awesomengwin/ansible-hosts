@@ -40,6 +40,7 @@
       SPOTIFY_CLIENT_SECRET: "{{ kingfisher_spotify_client_secret }}"
       LYRICS_API_URL: "{{ kingfisher_lyrics_api_url }}"
       KINGFISHER_SECRET_KEY: "{{ kingfisher_secret_key }}"
+      KINGFISHER_USER_AGENT: "{{ kingfisher_user_agent }}"
       VIRTUAL_HOST: "{{ kingfisher_host }}"
       VIRTUAL_PORT: "8080"
       LETSENCRYPT_HOST: "{{ kingfisher_host }}"
