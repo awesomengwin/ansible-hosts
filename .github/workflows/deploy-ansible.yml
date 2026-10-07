@@ -1,0 +1,43 @@
+name: Deploy Ansible
+
+on: 
+  workflow_dispatch: 
+    inputs:
+      env:
+        description: Environment
+        required: true
+        default: staging
+        type: choice
+        options:
+          - staging
+          - production
+
+jobs:
+  deploy:
+    name: Deploy Ansible
+    runs-on: ubuntu-latest
+
+    permissions: 
+      contents: read
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+          echo "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+      
+      - name: Run Ansible command
+        env:
+          ANSIBLE_VAULT_PASSWORD: ${{ inputs.env == 'staging' && secrets.ANSIBLE_VAULT_PASSWORD_STAGING || secrets.ANSIBLE_VAULT_PASSWORD_PRODUCTION }}
+        run: |
+          umask 077
+          printf '%s' "$ANSIBLE_VAULT_PASSWORD" > .vault-password
+          ansible-playbook -i "inventory_${{inputs.env}}" playbook.yml --vault-password-file .vault-password
